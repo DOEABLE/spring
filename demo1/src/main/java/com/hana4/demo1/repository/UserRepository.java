@@ -17,4 +17,6 @@ public interface UserRepository {
 		Optional<User> findById(Long id);
 
 		Optional<User> findByName(String name);
+
+		void initialize();
 }

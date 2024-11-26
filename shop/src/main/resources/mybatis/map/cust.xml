@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hana4.shop.dao.CustDAO">
+    <insert id="insert" parameterType="CustDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into Cust(name, tel, email) values(#{name}, #{tel}, #{email})
+    </insert>
+<!--    <insert id="insert" parameterType="CustDAO">-->
+<!--        insert into Cust(name, tel, email) values(#{name}, #{tel}, #{email})-->
+<!--        <selectKey order="AFTER" keyColumn="id" keyProperty="id" resultType="Integer">-->
+<!--            select last_insert_id()-->
+<!--        </selectKey>-->
+<!--    </insert>-->
+    <select id="getCusts" resultType="CustDTO">
+        select * from Cust
+    </select>
+
+    <select id="getCust" resultType="CustDTO" parameterType="Integer" statementType="PREPARED">
+        select id, name, tel from Cust where id = #{id}
+    </select>
+
+<!--    DAO에 update -->
+    <update id="update" parameterType="CustDTO">
+        update Cust set name = #{name}, tel = #{tel}
+        where id =#{id}
+    </update>
+    <delete id="delete" parameterType="Integer">
+        delete from Cust where id =#{id}
+    </delete>
+</mapper>
+<!--db랑 쿼리를 매핑하는 것 다이나믹 sql만들 때도 PREPARED사용 이게 CPU효율에 유리함.-->
