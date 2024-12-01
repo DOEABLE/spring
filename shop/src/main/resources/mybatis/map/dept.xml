@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hana4.shop.dao.DeptRepository">
+    <insert id="insert" parameterType="Dept" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into Dept(pid, dname, captain)
+        values(#{pid}, #{dname}, #{captain})
+    </insert>
+    <select id="getList" resultType="Dept" parameterType="Integer">
+        WITH RECURSIVE CteDept(id, pid, dname, captain, depth, h) AS (
+            select id, pid, dname, captain, 0, cast(id as char(10)) from Dept
+            where pid = 0 and id != #{id}
+        UNION ALL
+        select d.id, d.pid, d.dname, d.captain, depth + 1, concat(c.h, '-', d.id)
+        from CteDept c inner join Dept d on c.id = d.pid and d.id != #{id}
+            )
+        select c.id, c.pid, c.dname, c.captain, c.depth, e.ename as captainName
+        from CteDept c left join Emp e on c.captain = e.id
+        order by c.h
+    </select>
+
+    <select id="find" resultType="Dept" parameterType="Integer">
+        select * from Dept where id =#{id}
+    </select>
+<!--    DAO에 update -->
+    <update id="update" parameterType="Dept">
+        update Dept set pid=#{pid}, dname = #{dname}, captain=#{captain}
+        where id =#{id}
+    </update>
+    <delete id="delete" parameterType="Integer">
+        delete from Dept where id =#{id}
+    </delete>
+    <select id="getEmps" resultType="Emp">
+        select * from Emp where auth &lt; 9
+    </select>
+    <select id="findByPid" parameterType="Integer" resultType="Dept">
+        select * from Dept where pid=#{id}
+    </select>
+</mapper>
+<!--db랑 쿼리를 매핑하는 것 다이나믹 sql만들 때도 PREPARED사용 이게 CPU효율에 유리함.-->

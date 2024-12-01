@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,7 +65,11 @@ public class UserController {
 
 		@GetMapping("/{id}")
 		@ResponseBody
-		public User getUser(@PathVariable("id") Long id, HttpServletResponse res) throws IOException {
+		public ResponseEntity getUser(@PathVariable("id") Long id) {
+				Optional<User> user = service.getUser(id);
+				return ResponseEntity.of(user);
+		}
+		/*public User getUser(@PathVariable("id") Long id, HttpServletResponse res) throws IOException {
 				Optional<User> user = service.getUser(id);
 				if (user.isPresent()) {
 						return user.get();
@@ -72,11 +77,15 @@ public class UserController {
 						res.sendError(404, "User not found!");
 						return null;
 				}
-		}
+		}*/
 
-		private void checkExists(Long id, HttpServletResponse response) throws IOException {
-				if (service.getUser(id).isEmpty()) {
-						response.sendError(404, "User not found!");
+		private User checkExists(Long id, HttpServletResponse response) throws IOException {
+						Optional<User> user = service.getUser(id);
+						if (user.isEmpty()) {
+								response.sendError(404, "User not found!!");
+								return null;
+						}
+						return user.get();
 				}
 		}
 
@@ -88,9 +97,10 @@ public class UserController {
 				System.out.println("id = " + id);
 				user.setId(id);
 				System.out.println("user = " + user);
-				checkExists(user.getId(), res);
-
-				return service.updateUser(user);
+				User attachedUser = checkExists(user.getId(), res);
+				assert  attachedUser != null;
+				attachedUser.setName(user.getName());
+				return service.updateUser(attachedUser);
 		}
 
 		@DeleteMapping("/{id}")

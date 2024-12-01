@@ -1,0 +1,35 @@
+GET http://localhost:8080/users
+Accept: application/json
+
+
+### regist
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Kim1234"
+}
+
+### get a user
+GET http://localhost:8080/users/10
+
+### update user
+PATCH http://localhost:8080/users/1
+Content-Type: application/json
+
+{
+  "name": "New"
+}
+
+### ss
+POST http://localhost:8080/hello
+
+<> 2024-11-28T122037.200.html
+
+
+### update
+PATCH http://localhost:8080/users/2
+
+
+### delete
+DELETE http://localhost:8080/users/1

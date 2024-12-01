@@ -9,4 +9,9 @@
   <meta charset="UTF-8">
   <title>GANG GANG Add Cust</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    a:hover {
+      color: darkgreen;
+    }
+  </style>
 </head>
