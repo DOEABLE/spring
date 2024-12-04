@@ -22,7 +22,7 @@ public class VolatileUserRepository implements UserRepository {
 
 		public void initialize() {
 				users.clear();
-				User user = new User(1L, "Kim");
+				User user = new User(1L, "Kim",(short)0);
 				users.put(user.getId(), user);
 		}
 

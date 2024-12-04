@@ -21,12 +21,6 @@ public class JpaUserRepository implements UserRepository {
 				this.em = em;
 		}
 
-		public void initialize() {
-				users.clear();
-				User user = new User(1L, "Kim");
-				users.put(user.getId(), user);
-		}
-
 		@Override
 		public List<User> findAll() {
 				return em.createQuery("select u from User u", User.class).getResultList();
@@ -69,4 +63,20 @@ public class JpaUserRepository implements UserRepository {
 						.getResultList();
 				return users.stream().findAny();
 		}
+		public void initialize(){
+			String truncSql = "truncate table DemoUser";
+			em.createNativeQuery(truncSql).executeUpdate();
+		}
+
+    public void destroy() {
+		System.out.println("ddddddddd");
+		String[] sqls = new String[]{
+				"truncate table DemoUser",
+				"insert into Demo User select * from DemoUserBak",
+				"drop table DemoUserBak"
+		};
+		for(String sql : sqls){
+			em.createNativeQuery(sql).executeUpdate();
+		}
+    }
 }
