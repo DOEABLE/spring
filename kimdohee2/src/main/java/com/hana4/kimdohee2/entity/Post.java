@@ -27,8 +27,8 @@ public class Post {
     @Column(name = "title", nullable = false, length = 255)
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "writer", nullable = false, foreignKey = @ForeignKey(name = "post_writer_foreign"))
+    @ManyToOne      //n쪽(Post)에 FK 칼럽을 writer로 지정
+    @JoinColumn(name = "writer", nullable = false, foreignKey = @ForeignKey(name = "post_writer_foreign"))//외래키 제약조건에 이름지정
     private User writer;
 
     @Column(name = "body", nullable = false, columnDefinition = "TEXT")

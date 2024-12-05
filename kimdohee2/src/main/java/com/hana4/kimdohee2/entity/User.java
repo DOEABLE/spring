@@ -13,6 +13,7 @@ import lombok.*;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, length = 36)
     private String id;
 
