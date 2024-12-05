@@ -20,8 +20,10 @@ public class PostController {
 
     @GetMapping()
     public List<PostDTO> getPosts() {
+//        logger.trace("tttttttttttttttttrace");
         logger.debug("dedededededededee-postcontroller!!!");
         logger.info("dddddddddddddddddd-postcontroller!!!");
+        logger.warn("warning warning warning no! no!");
         logger.error("eeeeeeeeeeeeeeeee-postcontroller!!!");
 
         return service.getPosts();
