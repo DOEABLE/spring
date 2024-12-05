@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.hana4.demo1.domain.User;
+import com.hana4.demo1.entity.User;
 import com.hana4.demo1.repository.UserRepository;
 import com.hana4.demo1.repository.VolatileUserRepository;
 

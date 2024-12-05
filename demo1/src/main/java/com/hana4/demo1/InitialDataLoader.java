@@ -1,6 +1,6 @@
 package com.hana4.demo1;
 
-import com.hana4.demo1.domain.User;
+import com.hana4.demo1.entity.User;
 import com.hana4.demo1.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.boot.ApplicationArguments;

@@ -17,29 +17,25 @@ public class MessageTest {
     MessageSource msgsrc;
 
     @Test
-    void siteMessageTest(){
-        String title = msgsrc.getMessage("site.title",null,Locale.KOREAN);
+    void siteMessageTest() {
+        String title = msgsrc.getMessage("site.title", null, Locale.KOREAN);
         assertThat(title).isEqualTo("데모앱");
-
-        String titleEn = msgsrc.getMessage("site.title",null,Locale.ENGLISH);
+        String titleEn = msgsrc.getMessage("site.title", null, Locale.ENGLISH);
         assertThat(titleEn).isEqualTo("DemoApplication");
 
-
-        String description = msgsrc.getMessage("site.description", new Object[]{"테스트"},Locale.KOREAN);
+        String description = msgsrc.getMessage("site.description", new Object[] {"테스트"}, Locale.KOREAN);
         assertThat(description).isEqualTo("데모::테스트");
 
-        String descriptionZh = msgsrc.getMessage("site.description",new Object[]{"TEST"},Locale.CHINESE);
-        assertThat(descriptionZh).isEqualTo("演示文稿:TEST");
+        String descriptionZh = msgsrc.getMessage("site.description", new Object[] {"TEST"}, Locale.CHINESE);
+        assertThat(descriptionZh).isEqualTo("DEMO大::TEST");
     }
 
     @Test
-    void notFoundTest(){
+    void notFoundTest() {
         assertThatThrownBy(() -> msgsrc.getMessage("site.titleXXX", null, Locale.KOREA)).isInstanceOf(
                 NoSuchMessageException.class);
 
-        String msg = msgsrc.getMessage("site.xxx",null,"DemoDefault",Locale.KOREA);
+        String msg = msgsrc.getMessage("site.titleXXX", null, "DemoDefault", Locale.KOREA);
         assertThat(msg).isEqualTo("DemoDefault");
-
     }
-
 }

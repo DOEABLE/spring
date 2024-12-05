@@ -16,6 +16,7 @@ public class PostServiceImpl implements PostService {
         this.dao = dao;
     }
 
+
     @Override
     public List<PostDTO> getPosts() {
         return dao.findAll();

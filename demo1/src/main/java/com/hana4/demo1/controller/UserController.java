@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.hana4.demo1.domain.User;
+import com.hana4.demo1.entity.User;
 import com.hana4.demo1.service.UserService;
 
 import jakarta.servlet.http.HttpServletResponse;
