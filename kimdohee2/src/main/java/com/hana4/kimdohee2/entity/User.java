@@ -15,6 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, length = 36)
+    @Comment("작성자ID")
     private String id;
 
     @Column(name = "name", nullable = false, length = 31, unique = true)

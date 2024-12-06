@@ -16,6 +16,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "bigint unsigned")
     private Long id;
 
     @Column(name = "createAt", nullable = false, updatable = false)

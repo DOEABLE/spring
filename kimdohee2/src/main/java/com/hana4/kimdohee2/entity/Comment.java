@@ -16,10 +16,11 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "bigint unsigned")
     private Long id;
 
-    @Column(name = "createAt", nullable = false, updatable = false)
-    private LocalDateTime createAt;
+    @Column(name = "createAt", nullable = false, updatable = false) //상단은 database 상 column명
+    private LocalDateTime createAt;                                 //하단은 java상 명시.
 
     @Column(name = "updateAt", nullable = false)
     private LocalDateTime updateAt;

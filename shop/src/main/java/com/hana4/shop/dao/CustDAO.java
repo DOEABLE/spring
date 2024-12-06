@@ -15,7 +15,7 @@ public interface CustDAO {//.xml파일과 매핑되어있는 파일.
 
 		void update(CustDTO cust);
 
-		void insert(CustDTO cust);
+		void insert(CustDTO cust);//
 
 		void delete(Integer id);
 }
