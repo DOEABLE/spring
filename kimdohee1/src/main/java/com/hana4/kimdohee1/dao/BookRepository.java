@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-@Mapper
+@Mapper //mybatis, db와의 mapping
 public interface BookRepository {
     List<Book> getList();
     Book find(Integer bno);
