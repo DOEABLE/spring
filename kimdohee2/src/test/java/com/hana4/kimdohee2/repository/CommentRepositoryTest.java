@@ -49,8 +49,8 @@ public class CommentRepositoryTest {
         Comment savedComment = commentRepository.save(comment);
 
         // then
-        //assertThat(savedComment.getId()).isNotNull();
-        //assertThat(savedComment.setBody()).isEqualTo(comment.getBody());
+        /assertThat(savedComment.getId()).isNotNull();
+        /assertThat(savedComment.setBody()).isEqualTo(comment.getBody());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class CommentRepositoryTest {
         Comment updatedComment = commentRepository.save(savedComment);
 
         // then
-        //assertThat(updatedComment.setBody()).isEqualTo("Updated comment");
+        assertThat(updatedComment.setBody()).isEqualTo("Updated comment");
     }
 
     @Test
@@ -85,12 +85,12 @@ public class CommentRepositoryTest {
         Post post = new Post();
         post.setTitle("Test Post");
         post.setBody("This is a test post.");
-        //post.setWriter();
+        post.setWriter();
         em.persist(post);
 
         Comment comment = new Comment();
         comment.setBody("This is a test comment.");
-        //comment.setWriter(comment);
+        comment.setWriter(comment);
         comment.setPost(post);
         Comment savedComment = commentRepository.save(comment);
 
@@ -99,7 +99,7 @@ public class CommentRepositoryTest {
 
         // then
         Optional<Comment> deletedComment = commentRepository.findById(savedComment.getId());
-        //assertThat(deletedComment).isEmpty();
+        assertThat(deletedComment).isEmpty();
     }
 
     @Test
@@ -109,17 +109,17 @@ public class CommentRepositoryTest {
         Post post = new Post();
         post.setTitle("Test Post");
         post.setBody("This is a test post.");
-        //post.setWriter("TestUser");
+        post.setWriter("TestUser");
         em.persist(post);
 
         Comment comment1 = new Comment();
         comment1.setBody("Test Comment 1");
-        //comment1.setWriter("User1");
+        comment1.setWriter("User1");
         comment1.setPost(post);
 
         Comment comment2 = new Comment();
         comment2.setBody("Test Comment 2");
-        //comment2.setWriter("User2");
+        comment2.setWriter("User2");
         comment2.setPost(post);
 
         commentRepository.save(comment1);
@@ -129,6 +129,6 @@ public class CommentRepositoryTest {
         List<Comment> comments = commentRepository.findByPost(post);
 
         // then
-        //assertThat(comments).hasSize(2);
+        assertThat(comments).hasSize(2);
     }
 }

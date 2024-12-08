@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보유 도서 목록</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .title {
+            color: #1a365d;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .book-table {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .book-table th {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            font-weight: 600;
+            text-align: left;
+            color: #374151;
+        }
+        .book-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .book-table tr:hover {
+            background-color: #f3f4f6;
+        }
+        .book-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .book-link:hover {
+            text-decoration: underline;
+        }
+        .availability {
+            font-weight: bold;
+        }
+        .available {
+            color: #059669;
+        }
+        .unavailable {
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+<div class="container">
+    <h1 class="title" th:text="#{site.list.Title}">보유 도서 목록</h1>
+<!--    <h1 th:text="${currLang}"></h1>-->
+    <form action="/book/changelang" method="post" class="text-center my-3">
+        <select name="locale" id="locale" class="border p-2">
+            <option value="" th:text="#{ln.language}">언어</option>
+            <option th:each="lang : ${Langs}"
+                    th:value="${lang.locale}"
+                    th:text="${lang.lang}"
+                    th:selected="${lang.locale == currLang}"></option>
+        </select>
+        <button th:text="#{ln.apply}">submit</button>
+    </form>
+
+    <table class="book-table">
+        <thead>
+        <tr>
+            <th th:text="#{book.title}">도서명</th>
+            <th th:text="#{book.author}">저자</th>
+            <th th:text="#{book.publisher}">출판사</th>
+            <th th:text="#{book.isbn}">ISBN</th>
+            <th th:text="#{book.available}">대출 가능</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td>
+                <a th:href="@{/book/read(bno=${book.bno})}"
+                   th:text="${book.title}"
+                   class="book-link"></a>
+            </td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.publisher}"></td>
+            <td th:text="${book.isbn}"></td>
+            <td>
+                        <span th:text="${book.availability == 1 ? 'O' : 'X'}"
+                              th:class="${book.availability == 1 ? 'availability available' : 'availability unavailable'}">
+                        </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

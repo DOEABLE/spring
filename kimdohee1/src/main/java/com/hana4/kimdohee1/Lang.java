@@ -8,10 +8,7 @@ import java.util.Locale;
 public enum Lang {
     DEFULT("한국어", Locale.KOREAN),
     ENGLISH("English", Locale.ENGLISH),
-    CHINESE("中國", Locale.CHINESE),
-    GERMAN("Deutsch", Locale.GERMAN),
-    ITALIAN("Italiano", Locale.ITALIAN),
-    FRENCH("Français", Locale.FRENCH);
+    CHINESE("中國", Locale.CHINESE);
 
     private String lang;
     private Locale locale;

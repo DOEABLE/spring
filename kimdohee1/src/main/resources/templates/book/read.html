@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 상세정보</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 20px;
+        }
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            width: 120px;
+            background-color: #f8f9fa;
+            text-align: left;
+        }
+        .form-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            max-width: 300px;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .alert {
+            padding: 1rem;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+<div class="container">
+    <h1 class="title" th:text="#{site.read.Title}">도서 상세 보기</h1>
+    <table>
+        <tr>
+            <th th:text="#{book.title}">도서명</th>
+            <td th:text="${book.title}">도서명</td>
+        </tr>
+        <tr>
+            <th th:text="#{book.author}">저자</th>
+            <td th:text="${book.author}">저자</td>
+        </tr>
+        <tr>
+            <th th:text="#{book.publisher}">출판사</th>
+            <td th:text="${book.publisher}">출판사</td>
+        </tr>
+        <tr>
+            <th th:text="#{book.description}">요약보기</th>
+            <td th:text="${book.description}"></td>
+        </tr>
+        <tr>
+            <th>ISBN</th>
+            <td th:text="${book.isbn}">ISBN</td>
+        </tr>
+        <tr>
+            <th th:text="#{book.borrow.status}">대출 가능</th>
+            <td th:text="${book.availability == 1 ? 'O' : 'X'}">대출 가능</td>
+        </tr>
+    </table>
+
+    <form th:if="${book.availability == 1}" th:action="@{/book/borrow}" method="post" class="form-container">
+        <input type="hidden" name="bno" th:value="${book.bno}">
+        <div class="form-group">
+            <label for="borrowerId" class="form-label">신청자</label>
+            <input type="text" id="borrowerId" name="borrowerId" required class="form-input">
+        </div>
+        <button type="submit" class="btn btn-primary"th:text="#{book.borrow.request}">대출 신청</button>
+    </form>
+
+    <div th:if="${book.availability == 0}" class="alert">
+        <p>대출이 불가능한 상태입니다</p>
+    </div>
+
+    <a href="/book/list" class="btn btn-secondary" th:text="#{book.list}">목록으로 돌아가기</a>
+</div>
+</body>
+</html>

@@ -6,10 +6,12 @@ import jakarta.persistence.EntityManager;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Component  //spring bean으로 등록됨.
+@Transactional
 public class InitialDataLoader implements ApplicationRunner {
     private final UserRepository repository;
 

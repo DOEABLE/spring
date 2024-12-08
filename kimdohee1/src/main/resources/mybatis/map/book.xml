@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hana4.kimdohee1.dao.BookRepository">
+    <!-- 도서 등록 -->
+    <insert id="insert" parameterType="Book" useGeneratedKeys="true" keyProperty="bno" keyColumn="bno">
+        INSERT INTO book (title, author, publisher, description, isbn, availability, borrowerId, startDate, endDate)
+        VALUES (#{title}, #{author}, #{publisher}, #{description}, #{isbn}, #{availability}, #{borrowerId}, #{startDate}, #{endDate})
+    </insert>
+    <!-- 목록 페이지 -->
+    <select id="getList" resultType="com.hana4.kimdohee1.dto.Book">
+        select * from Book
+    </select>
+    <!-- 조회 페이지 -->
+    <select id="find" resultType="com.hana4.kimdohee1.dto.Book" parameterType="Integer">
+        select * from Book where bno =#{bno}
+    </select>
+    <select id="selectBookByIsbn" resultType="com.hana4.kimdohee1.dto.Book">
+        SELECT * FROM books WHERE isbn = #{isbn}
+    </select>
+    <delete id="delete" parameterType="Integer">
+        delete from Book where bno =#{bno}
+    </delete>
+    <update id="updateBorrower" parameterType="Book">
+        UPDATE book
+        SET
+            borrowerId = #{borrowerId},
+            startDate = #{startDate},
+            endDate = #{endDate},
+            availability = 0
+        WHERE bno = #{bno}
+    </update>
+<!--    목록보기 버튼 클릭 시 해당 도서의 대출 가능 상태가 '불가능'으로 변경-->
+    <update id="updateAvailability">
+        UPDATE book
+        SET availability = #{availability}
+        WHERE bno = #{bno}
+    </update>
+
+    <!-- 대출 결과 조회 -->
+    <select id="getBorrowResult" parameterType="String" resultType="Book">
+        SELECT * FROM book
+        WHERE borrowerId = #{borrowerId}
+        ORDER BY startDate DESC
+        LIMIT 1
+    </select>
+</mapper>
