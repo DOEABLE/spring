@@ -1,7 +1,9 @@
 package com.hana4.kimdohee2.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
+
 
 @Entity
 @Table(name = "User", uniqueConstraints = {@UniqueConstraint(name = "user_name_unique", columnNames = "name")})

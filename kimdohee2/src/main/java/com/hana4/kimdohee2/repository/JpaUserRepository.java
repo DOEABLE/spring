@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Transactional
-public class JpaUserRepository implements  UserRepository{
+public class JpaUserRepository implements UserRepository{
     private final EntityManager em;
     public JpaUserRepository(EntityManager em){
         this.em = em;
