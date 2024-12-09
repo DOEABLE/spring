@@ -24,5 +24,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     void deleteById(Long id);
 
+    //게시물 별 댓글 조회
     List<Comment> findByPost(Post post);
+    //특정 작성자의 댓글 목록 조회
+    List<Comment> findByWriter(Post post);
 }

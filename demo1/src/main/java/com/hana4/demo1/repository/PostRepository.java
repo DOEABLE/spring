@@ -36,6 +36,7 @@ public interface PostRepository extends JpaRepository<Post,String> {
 		""")
     List<Post> findByOldWriter(@Param("writer") String writer, @Param("dateTime") LocalDateTime dateTime);//특정 작성자의 이전 게시물 조회
 
-    @Query("select p.title, p.writer, p.createdate from Post p where p.writer = :writer")
+    @Query(value = "select p.title, p.writer, p.createdate from Post p where p.writer = :writer", nativeQuery = true)
     List<Object[]> findBySomeColumns(@Param("writer") String writer);   //특정 컬럼만 조회
+    //nativeQuery = true 하면 sql구문 사용가능.
 }

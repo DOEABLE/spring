@@ -1,18 +1,14 @@
 package com.hana4.demo1.entity;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
 import com.hana4.demo1.dto.UserDTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "DemoUser")
@@ -58,4 +54,7 @@ public class User {
     public UserDTO toDTO() {
         return UserDTO.builder().id(id).name(name).age(age).build();
     }
+
+    @ManyToMany(mappedBy = "codeUsers")
+    private Set<Code> useCodes; //user를 기준으로 (mappedBy는 기준이 되는 Table에 명시.)
 }
