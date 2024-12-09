@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Post {
+public class Post /*extends BaseEntity*/{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "bigint unsigned")
@@ -57,4 +57,3 @@ public class Post {
         this.updateAt = LocalDateTime.now();
     }
 }
-
