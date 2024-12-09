@@ -1,5 +1,6 @@
 package com.hana4.demo1.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hana4.demo1.entity.BaseEntity;
@@ -49,11 +50,18 @@ public class Code extends BaseEntity {
     private CodeInfo codeInfo;
 
     @OneToMany(mappedBy = "code", fetch = FetchType.EAGER)
-    private List<SubCode> subcodes;
+    private List<SubCode> subcodes = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "CodeUser",
             joinColumns = @JoinColumn(name = "code"),
             inverseJoinColumns = @JoinColumn(name = "user"))
-    private List<User> codeUsers;
+    private List<User> codeUsers = new ArrayList<>();
+
+    public synchronized void addUser(User user) {
+        System.out.println("this.codeUsers = " + this.codeUsers);
+        this.codeUsers.add(user);
+    }
+
 }
