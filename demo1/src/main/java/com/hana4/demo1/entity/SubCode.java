@@ -29,7 +29,7 @@ public class SubCode extends BaseEntity {
     private String value;
 
     @ManyToOne()
-    @JoinColumn(name = "code",
+    @JoinColumn(name = "code", nullable = false,
             foreignKey = @ForeignKey(name = "fk_SubCode_code"))
     @ToString.Exclude
     private Code code;

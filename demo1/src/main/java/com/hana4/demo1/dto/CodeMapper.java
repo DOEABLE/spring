@@ -8,16 +8,23 @@ import com.hana4.demo1.entity.SubCode;
 
 public class CodeMapper {
 		public static CodeDTO toDTO(Code code) {
-				System.out.println("code.getCreateAt() = " + code.getCreateAt());
+			if(Objects.isNull(code)){
+				return null;
+			}
 				return CodeDTO.builder()
 						.id(code.getId())
 						.codeName(code.getCodeName())
 						.createAt(code.getCreateAt())
 						.updateAt(code.getUpdateAt())
-						.subcodes(code.getSubcodes().stream().map(SubCodeMapper::toDTO).toList()).build();
+						.build();
+
+
 		}
 
 		public static Code toEntity(CodeDTO dto) {
+			if(Objects.isNull(dto)){
+				return null;
+			}
 				Code code = new Code();
 				code.setId(dto.getId());
 				code.setCodeName(dto.getCodeName());

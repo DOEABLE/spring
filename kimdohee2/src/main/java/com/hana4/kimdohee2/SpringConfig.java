@@ -35,11 +35,6 @@ public class SpringConfig {
         return new JpaUserRepository(em);
     }
 
-//    @Bean
-//    public ApiDAO apiDAO() {
-//        return new ApiDAOImpl(apiRepository);
-//    }
-
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver sessionResolver = new SessionLocaleResolver();

@@ -27,7 +27,7 @@ import java.util.Map;
 
 //@DataJpaTest
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@SpringBootTest //[todo]위, 아래 둘 다 통과.
+@SpringBootTest
 @AutoConfigureMockMvc
 @WebMvcTest(PostController.class)
 public class PostControllerTest {
