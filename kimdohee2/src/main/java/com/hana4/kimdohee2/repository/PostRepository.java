@@ -21,13 +21,8 @@ public interface PostRepository  extends JpaRepository<Post,Long> {
 
     List<Post> findByWriter(User writer, Sort sort);                  //특정 작성자의 게시물을 정렬하여 조회
 
-    List<Post> findByTitleStartsWith(String title);                     //특정 문자열로 시작하는 제목의 게시물 조회
-
-    List<Post> findByTitleStartingWith(String title);                   //특정 문자열로 시작하는 제목의 게시물 조회
-
     Page<Post> findByTitleLike(String title, Pageable pageable);        //제목에 특정 문자열이 포함된 게시물을 페이징하여 조회
 
-    long countByTitleLike(String searchStr);                            //제목에 특정 문자열이 포함된 게시물 수 반환
 
     // @Query("select m, p from Msg m, Post p where m.post = p.id")
     @Query("""

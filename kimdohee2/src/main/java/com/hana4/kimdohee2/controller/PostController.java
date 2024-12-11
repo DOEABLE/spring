@@ -23,11 +23,10 @@ public class PostController {
         return postService.getAllPosts();
     }
     @PostMapping("/posts")
-    public ResponseEntity<Void> createPost(@RequestBody PostDTO post) {
-        return postService.addPost(post);
-//        Post post = postService.convertToPost(dto);
-//        postRepository.save(post);
-//        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public PostDTO createPost(@RequestBody PostDTO post) {
+        Post post = postService.convertToPost(dto);
+        postRepository.save(post);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping("/{id}")
     public PostDTO getPost(@PathVariable("id") Long id) {

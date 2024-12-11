@@ -1,27 +1,26 @@
 package com.hana4.demo1.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.Arrays;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hana4.demo1.dto.UserDTO;
+import com.hana4.demo1.repository.JpaUserRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hana4.demo1.dto.UserDTO;
-import com.hana4.demo1.repository.JpaUserRepository;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,10 +42,10 @@ public class ApiControllerTest {
         repository.destroy();
     }
 
-    // @BeforeEach
-    // void beforeEach() {
-    // 	this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    // }
+// @BeforeEach
+// void beforeEach() {
+// 	this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+// }
 
     @Test
     @DisplayName("/api/users - User list test")
@@ -58,8 +57,8 @@ public class ApiControllerTest {
         );
 
         List<UserDTO> list = Arrays.asList(
-                new UserDTO(1L, "AA10", (short)10),
-                new UserDTO(2L, "AA11", (short)11), new UserDTO(3L, "AA12", (short)12));
+                new UserDTO(1L, "AA10", (short) 10),
+                new UserDTO(2L, "AA11", (short) 11), new UserDTO(3L, "AA12", (short) 12));
 
         String reqStr = objectMapper.writeValueAsString(list);
         System.out.println("reqStr = " + reqStr);
@@ -89,7 +88,7 @@ public class ApiControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.age").value((int)age));
+                .andExpect(jsonPath("$.age").value((int) age));
 
     }
 

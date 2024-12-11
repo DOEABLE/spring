@@ -1,6 +1,7 @@
 package com.hana4.kimdohee2.service;
 
 import com.hana4.kimdohee2.dto.PostDTO;
+import com.hana4.kimdohee2.entity.Post;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -8,11 +9,12 @@ import java.util.List;
 public interface PostService {
     Object getPost(Long id);
 
-    ResponseEntity<Void> addPost(PostDTO post);
+    PostDTO addPost(PostDTO postDTO);
 
-    PostDTO modifyPost(PostDTO post);
+    PostDTO modifyPost(PostDTO postDTO);
 
     PostDTO removePost(Long id);
 
     List<PostDTO> getAllPosts();
+
 }

@@ -10,7 +10,7 @@ public class PostMapper {
                 .createAt(post.getCreateAt())
                 .updateAt(post.getUpdateAt())
                 .title(post.getTitle())
-                .writerId(post.getWriter().getId())
+                .writerId(post.getWriter().getId().toString())
                 .body(post.getBody())
                 .build();
     }

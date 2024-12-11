@@ -5,6 +5,7 @@ import com.hana4.kimdohee2.dto.PostDTO;
 import com.hana4.kimdohee2.dto.PostMapper;
 import com.hana4.kimdohee2.entity.Post;
 import com.hana4.kimdohee2.entity.User;
+import com.hana4.kimdohee2.repository.PostRepository;
 import com.hana4.kimdohee2.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,12 @@ import java.util.List;
 
 @Service
 public class PostServiceImpl implements PostService {
-    private final PostDAO dao;
-    private UserRepository userRepository;
+    private PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostServiceImpl(PostDAO dao) {
-        this.dao = dao;
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -26,8 +28,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<Void> addPost(PostDTO post) {
-        return null;
+    public PostDTO addPost(PostDTO postDTO) {
+        User writer = userRepository.findById(UUID.fromString(postDTO.getWriterId()))
+                .orElseThrow(() -> new IllegalArgumentException("Writer not found"));
+
+        Post post = PostMapper.toPost(postDTO);
+
+        Post savedPost = postRepository.save(post);
+
+        return PostMapper.toDTO(savedPost);
     }
 
     @Override
@@ -43,11 +52,5 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDTO> getAllPosts() {
         return null;
-    }
-
-    public Post convertToPost(PostDTO dto) {
-        User writer = userRepository.findById(dto.getWriterId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid writer ID: " + dto.getWriterId()));
-        return PostMapper.toPost(dto, writer);
     }
 }
