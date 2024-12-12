@@ -29,6 +29,7 @@ public class PostController {
     @PostMapping("/posts")
     public PostDTO createPost(@RequestBody @Valid PostDTO postDTO) {
         try {
+            System.out.println("!!!!!!!!!!!!!들어옴!!!!!!!!!");
             return postService.addPost(postDTO);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

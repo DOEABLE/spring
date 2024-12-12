@@ -4,12 +4,13 @@ import com.hana4.kimdohee2.dto.UserDTO;
 import com.hana4.kimdohee2.entity.User;
 import com.hana4.kimdohee2.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
+@Service
 public class UserService {
     private UserRepository userRepository;
 
@@ -19,13 +20,6 @@ public class UserService {
 
     public List<User> getList() {
         return userRepository.findAll();
-    }
-
-    public String regist(User user) {
-        userRepository.findByName(user.getName()).ifPresent(u -> {
-            throw new IllegalStateException("Duplicate name!");
-        });
-        return userRepository.addUser(user);
     }
 
     public Optional<User> getUser(String id) {
@@ -38,7 +32,7 @@ public class UserService {
 
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
-        User updatedUser = userRepository.saveUser(user);
+        User updatedUser = userRepository.save(user);
         return convertToDTO(updatedUser);
     }
 
@@ -70,7 +64,7 @@ public class UserService {
         User user = new User();
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
-        User savedUser = userRepository.saveUser(user);
+        User savedUser = userRepository.save(user);
         return convertToDTO(savedUser);
     }
 
@@ -79,11 +73,11 @@ public class UserService {
         if (!userRepository.existsById(id)) {
             throw new EntityNotFoundException("User not found with ID: " + id);
         }
-        userRepository.deleteUser(id);
+        userRepository.deleteById(id);
     }
 
     public User updateUser(User attachedUser) {
-        return userRepository.saveUser(attachedUser);
+        return userRepository.save(attachedUser);
     }
 }
 //    public User deleteUser(String id) {

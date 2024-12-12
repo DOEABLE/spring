@@ -14,7 +14,7 @@ public class PostDTO {
     private Long id;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
-    @JsonBackReference
+//    @JsonBackReference
     @ToString.Exclude
     private String title;
     private String writerId; // User ID

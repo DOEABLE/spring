@@ -32,7 +32,7 @@ public class InitialDataLoader implements ApplicationRunner {
             user.setEmail(name.toLowerCase() + "@gmail.com");
 
             try {
-                repository.saveUser(user);
+                repository.save(user);
                 System.out.println("사용자 등록 완료: " + name);
             } catch (DataIntegrityViolationException e) {
                 System.out.println("사용자 이름 중복: " + name + ". 건너뜁니다.");

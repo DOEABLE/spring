@@ -8,10 +8,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findByCreateAtLessThanEqual(LocalDateTime dateTime);   //지정된 날짜/시간 이전에 생성된 게시물 목록 조회
 
