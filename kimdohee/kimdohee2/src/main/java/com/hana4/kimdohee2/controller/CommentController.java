@@ -1,6 +1,7 @@
 package com.hana4.kimdohee2.controller;
 
 import com.hana4.kimdohee2.dto.CommentDTO;
+import com.hana4.kimdohee2.dto.PostDTO;
 import com.hana4.kimdohee2.entity.User;
 import com.hana4.kimdohee2.service.CommentService;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,12 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteComment(@PathVariable Long id) {
-        commentService.deleteComment(id);
+    public CommentDTO deleteComment(@PathVariable("id") Long id) {
+        return commentService.deleteComment(id);
+    }
+    @PatchMapping("/{id}")
+    public CommentDTO updateComment(@PathVariable("id") Long id, @RequestBody CommentDTO commentDTO) {
+        commentDTO.setId(id);
+        return commentService.modifyComment(commentDTO);
     }
 }

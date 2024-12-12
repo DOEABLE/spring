@@ -7,10 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hana4.kimdohee2.controller.PostController;
-import com.hana4.kimdohee2.dto.PostDTO;
+import com.hana4.kimdohee2.dto.CommentDTO;
+import com.hana4.kimdohee2.entity.Comment;
 import com.hana4.kimdohee2.entity.Post;
 import com.hana4.kimdohee2.entity.User;
+import com.hana4.kimdohee2.repository.CommentRepository;
 import com.hana4.kimdohee2.repository.PostRepository;
 import com.hana4.kimdohee2.repository.UserRepository;
 import com.hana4.kimdohee2.service.PostService;
@@ -18,32 +19,24 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.LocalDateTime;
+
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-//@DataJpaTest
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+
 @SpringBootTest
 @AutoConfigureMockMvc
 //@WebMvcTest(PostController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 public class PostControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -57,8 +50,11 @@ public class PostControllerTest {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Test
+    @DisplayName("Post 상세 보기 테스트")
     @Order(2)
     void getPostTest() throws Exception {
         // 이미 존재하는 USER와 POST 데이터 준비
@@ -186,6 +182,7 @@ public class PostControllerTest {
 //        mockMvc.perform(delete("/posts/{postId}", 1))
 //                .andExpect(status().isNoContent());
     }
+
     @Test
     @DisplayName("Post 목록 보기 테스트")
     @Order(5)
@@ -235,55 +232,205 @@ public class PostControllerTest {
 //                .andExpect(status().isOk())
 //                .andExpect(jsonPath("$").isArray());
     }
-//
+
+    /**
+     * Comment Controller Test
+     *
+     * @throws Exception
+     */
     @Test
-    @DisplayName("Post 상세 보기 테스트")
+    @DisplayName("댓글 쓰기 테스트")
     @Order(6)
-    public void getPostDetailTest() throws Exception {
-        mockMvc.perform(get("/posts/{postId}", 1))
+    public void createCommentTest() throws Exception {
+        // 이미 존재하는 USER 데이터 준비
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new IllegalStateException("USER 테이블에 데이터가 없습니다.");
+        }
+        User writer = users.get(0);
+
+        // 이미 존재하는 POST 데이터 준비
+        List<Post> posts = postRepository.findAll();
+        if (posts.isEmpty()) {
+            Post post = Post.builder()
+                    .title("Sample Post")
+                    .body("This is a sample post.")
+                    .writer(writer)
+                    .build();
+            postRepository.save(post);
+            posts = postRepository.findAll();
+        }
+        Post post = posts.get(0);
+
+        // 댓글 데이터 준비
+        CommentDTO commentDTO = CommentDTO.builder()
+                .postId(post.getId())
+                .writerId(writer.getId().toString())
+                .body("This is a test comment.")
+                .build();
+        // MockMvc를 사용한 POST 요청 및 검증
+        String url = "/comments/posts/" + post.getId();
+        mockMvc.perform(post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(commentDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.body").value("This is a test comment."))
+                .andExpect(jsonPath("$.postId").value(post.getId()))
+                .andExpect(jsonPath("$.writerId").value(writer.getId().toString()))
+                .andDo(print());
+
     }
-//    @Test
-//    @DisplayName("댓글 쓰기 테스트")
-//    public void createCommentTest() throws Exception {
-//        Map<String, String> request = new HashMap<>();
-//        request.put("content", "This is a test comment.");
-//        request.put("writer", "CommentUser");
-//
-//        mockMvc.perform(post("/posts/{postId}/comments", 1)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.content").value("This is a test comment."));
-//    }
-//
-//    @Test
-//    @DisplayName("댓글 목록 보기 테스트")
-//    public void listCommentsTest() throws Exception {
-//        mockMvc.perform(get("/posts/{postId}/comments", 1))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isArray());
-//    }
-//
-//    @Test
-//    @DisplayName("댓글 수정 테스트")
-//    public void updateCommentTest() throws Exception {
+
+    @Test
+    @Order(7)
+    @DisplayName("댓글 목록 보기 테스트")
+    public void listCommentsTest() throws Exception {
+        // 이미 존재하는 USER 데이터 준비
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new IllegalStateException("USER 테이블에 데이터가 없습니다.");
+        }
+        User writer = users.get(0);
+
+        // 이미 존재하는 POST 데이터 준비
+        List<Post> posts = postRepository.findAll();
+        if (posts.isEmpty()) {
+            Post post = Post.builder()
+                    .title("Sample Post")
+                    .body("This is a sample post.")
+                    .writer(writer)
+                    .build();
+            postRepository.save(post);
+            posts = postRepository.findAll();
+        }
+        Post post = posts.get(0);
+
+        // 기존 POST 데이터 수 확인
+        long initialPostCount = commentRepository.count();
+
+        // 댓글 데이터 준비 및 저장
+        Comment comment1 = Comment.builder()
+                .post(post)
+                .writer(writer)
+                .body("This is a test comment.")
+                .build();
+        Comment comment2 = Comment.builder()
+                .post(post)
+                .writer(writer)
+                .body("This is a test comment.")
+                .build();
+        commentRepository.saveAll(List.of(comment1, comment2));
+
+        // MockMvc를 사용한 GET 요청 및 검증
+        mockMvc.perform(get("/comments")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize((int) (initialPostCount + 2))))
+                .andExpect(jsonPath("$[0].body").value("This is a test comment."))
+                .andExpect(jsonPath("$[1].body").value("This is a test comment."))
+                .andDo(print());
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("댓글 삭제 테스트")
+    public void deleteCommentTest() throws Exception {
+        // 이미 존재하는 USER 데이터 준비
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new IllegalStateException("USER 테이블에 데이터가 없습니다.");
+        }
+        User writer = users.get(0);
+
+        // 이미 존재하는 POST 데이터 준비
+        List<Post> posts = postRepository.findAll();
+        if (posts.isEmpty()) {
+            Post post = Post.builder()
+                    .title("Sample Post")
+                    .body("This is a sample post.")
+                    .writer(writer)
+                    .build();
+            postRepository.save(post);
+            posts = postRepository.findAll();
+        }
+        Post post = posts.get(0);
+
+        Comment comment2 = Comment.builder()
+                .post(post)
+                .writer(writer)
+                .body("This is a test comment.")
+                .build();
+        commentRepository.save(comment2);
+
+        Comment comment = commentRepository.findAll().get(0);
+        String url = "/comments/"+comment.getId();
+        mockMvc.perform(delete(url)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.body").value("This is a test comment."))
+                .andExpect(jsonPath("$.postId").value(post.getId()))
+                .andExpect(jsonPath("$.writerId").value(writer.getId().toString()))
+                .andDo(print());
+    }
+    @Test
+    @DisplayName("댓글 수정 테스트")
+    public void updateCommentTest() throws Exception {
+        // 이미 존재하는 USER 데이터 준비
+        // 이미 존재하는 USER 데이터 준비
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new IllegalStateException("USER 테이블에 데이터가 없습니다.");
+        }
+        User writer = users.get(0);
+
+        // 이미 존재하는 POST 데이터 준비
+        List<Post> posts = postRepository.findAll();
+        if (posts.isEmpty()) {
+            Post post = Post.builder()
+                    .title("Sample Post")
+                    .body("This is a sample post.")
+                    .writer(writer)
+                    .build();
+            postRepository.save(post);
+            posts = postRepository.findAll();
+        }
+        Post post = posts.get(0);
+
+        Comment comment2 = Comment.builder()
+                .post(post)
+                .writer(writer)
+                .body("This is a test comment.")
+                .build();
+        commentRepository.save(comment2);
+
+        CommentDTO requestCommentDTO = new CommentDTO();
+        requestCommentDTO.setBody("Updated comment body");
+
+        // When & Then
+        mockMvc.perform(patch("/comments/{id}", comment2.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestCommentDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(comment2.getId()))
+                .andExpect(jsonPath("$.body").value("Updated comment body"))
+                .andDo(print());
+
+        // Verify the comment was updated in the database
+        Comment updatedComment = commentRepository.findById(comment2.getId()).orElseThrow();
+        assert updatedComment.getBody().equals("Updated comment body");
+
+
 //        Map<String, String> request = new HashMap<>();
 //        request.put("content", "Updated comment content.");
 //
-//        mockMvc.perform(put("/posts/{postId}/comments/{commentId}", 1, 1)
+//        mockMvc.perform(patch("/comments/", 1, 1)
 //                        .contentType(MediaType.APPLICATION_JSON)
 //                        .content(objectMapper.writeValueAsString(request)))
 //                .andExpect(status().isOk())
 //                .andExpect(jsonPath("$.content").value("Updated comment content."));
-//    }
-//
-//    @Test
-//    @DisplayName("댓글 삭제 테스트")
-//    public void deleteCommentTest() throws Exception {
-//        mockMvc.perform(delete("/posts/{postId}/comments/{commentId}", 1, 1))
-//                .andExpect(status().isNoContent());
-//    }
+    }
 }
+
+
+
 

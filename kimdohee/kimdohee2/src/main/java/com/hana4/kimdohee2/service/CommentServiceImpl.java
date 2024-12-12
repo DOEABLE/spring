@@ -2,6 +2,8 @@ package com.hana4.kimdohee2.service;
 
 import com.hana4.kimdohee2.dto.CommentDTO;
 
+import com.hana4.kimdohee2.dto.PostDTO;
+import com.hana4.kimdohee2.dto.PostMapper;
 import com.hana4.kimdohee2.entity.Comment;
 import com.hana4.kimdohee2.entity.Post;
 import com.hana4.kimdohee2.entity.User;
@@ -55,9 +57,13 @@ public class CommentServiceImpl implements CommentService{
         Post post = postRepository.findById(commentDTO.getPostId())
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + commentDTO.getPostId()));
 
+        User writer = userRepository.findById(commentDTO.getWriterId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + commentDTO.getWriterId()));
+
         // DTO를 Comment 엔티티로 변환
         Comment comment = new Comment(commentDTO.getBody(), post, user);
         comment.setPost(post); // 연관 관계 설정
+        comment.setWriter(writer); // 연관 관계 설정
         comment.setBody(commentDTO.getBody());
         comment.setCreateAt(LocalDateTime.now());
         comment.setUpdateAt(LocalDateTime.now());
@@ -84,12 +90,24 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public void deleteComment(Long id) {
-        if (!commentRepository.existsById(id)) {
-            throw new RuntimeException("Comment not found with id: " + id);
-        }
-        commentRepository.deleteById(id);
+    public CommentDTO deleteComment(Long id) {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("not found comment!"));
+
+        commentRepository.delete(comment);
+        return convertToDTO(comment);
+
     }
+
+    @Override
+    public CommentDTO modifyComment(CommentDTO commentDTO) {
+        Comment existingComment = commentRepository.findById(commentDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        existingComment.setBody(commentDTO.getBody());
+
+        Comment updatedComment = commentRepository.save(existingComment);
+        return convertToDTO(updatedComment);
+    }
+
     private CommentDTO convertToDTO(Comment comment) {
         return new CommentDTO(
                 comment.getId(),

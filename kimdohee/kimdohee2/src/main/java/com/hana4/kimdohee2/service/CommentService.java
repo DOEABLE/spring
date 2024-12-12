@@ -1,6 +1,7 @@
 package com.hana4.kimdohee2.service;
 
 import com.hana4.kimdohee2.dto.CommentDTO;
+import com.hana4.kimdohee2.dto.PostDTO;
 import com.hana4.kimdohee2.entity.User;
 
 import java.util.List;
@@ -15,5 +16,6 @@ public interface CommentService {
 
     CommentDTO addComment(User user, CommentDTO commentDTO);
 
-    void deleteComment(Long id);
+    CommentDTO deleteComment(Long id);
+    CommentDTO modifyComment(CommentDTO commentDTO);
 }
