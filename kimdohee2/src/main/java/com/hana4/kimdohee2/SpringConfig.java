@@ -36,12 +36,6 @@ public class SpringConfig {
     }
 
     @Bean
-    public LocaleResolver localeResolver() {
-        SessionLocaleResolver sessionResolver = new SessionLocaleResolver();
-        sessionResolver.setDefaultLocale(Locale.KOREAN);
-        return sessionResolver;
-    }
-    @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .components(new Components())

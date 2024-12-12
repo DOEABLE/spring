@@ -1,12 +1,16 @@
 package com.hana4.kimdohee2.controller;
 
 import com.hana4.kimdohee2.dto.PostDTO;
+import com.hana4.kimdohee2.dto.PostMapper;
 import com.hana4.kimdohee2.entity.Post;
+import com.hana4.kimdohee2.entity.User;
 import com.hana4.kimdohee2.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -23,10 +27,12 @@ public class PostController {
         return postService.getAllPosts();
     }
     @PostMapping("/posts")
-    public PostDTO createPost(@RequestBody PostDTO post) {
-        Post post = postService.convertToPost(dto);
-        postRepository.save(post);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public PostDTO createPost(@RequestBody @Valid PostDTO postDTO) {
+        try {
+            return postService.addPost(postDTO);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
     @GetMapping("/{id}")
     public PostDTO getPost(@PathVariable("id") Long id) {

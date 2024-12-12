@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface PostRepository  extends JpaRepository<Post,Long> {
+public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findByCreateAtLessThanEqual(LocalDateTime dateTime);   //지정된 날짜/시간 이전에 생성된 게시물 목록 조회
 
     long countByCreateAtLessThanEqual(LocalDateTime dateTime);        //지정된 날짜/시간 이전에 생성된 게시물 수 반환
@@ -20,6 +20,8 @@ public interface PostRepository  extends JpaRepository<Post,Long> {
     List<Post> findByWriter(User writer);
 
     List<Post> findByWriter(User writer, Sort sort);                  //특정 작성자의 게시물을 정렬하여 조회
+
+
 
     Page<Post> findByTitleLike(String title, Pageable pageable);        //제목에 특정 문자열이 포함된 게시물을 페이징하여 조회
 
