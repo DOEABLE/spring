@@ -7,7 +7,10 @@ plugins {
 
 group = 'com.hana4'
 version = '0.0.1-SNAPSHOT'
-
+//for intellij build clean시 delete
+clean {
+    delete file('src/main/generated')
+}
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -21,15 +24,20 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'    //swagger
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'    //swagger
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'com.querydsl:querydsl-jpa::jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 tasks.named('test') {
@@ -57,4 +65,3 @@ jacocoTestCoverageVerification {
         }
     }
 }
-

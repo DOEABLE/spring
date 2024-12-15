@@ -1,5 +1,6 @@
 package com.hana4.demo1.repository;
 
+import static com.hana4.demo1.entity.QCode.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.hana4.demo1.entity.Code;
 import com.hana4.demo1.entity.CodeInfo;
+import com.hana4.demo1.entity.QCode;
 import com.hana4.demo1.entity.SubCode;
 import com.hana4.demo1.entity.User;
 
@@ -34,6 +36,16 @@ public class CodeRepositoryTest {
 
 		@Autowired
 		UserRepository userRepository;
+
+		@Test
+		void codeListQTest() {
+				QCode qCode = code;
+				Iterable<Code> codes = codeRepository.findAll(code.codeName.contains("1").and(code.id.between(30, 31))
+				);
+				// System.out.println("codes = " + codes);
+				codes.forEach(System.out::println);
+				assertThat(codes).isNotEmpty();
+		}
 
 		@Test
 		@Order(2)

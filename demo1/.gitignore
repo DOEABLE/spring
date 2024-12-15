@@ -36,3 +36,6 @@ logs/
 
 ### VS Code ###
 .vscode/
+
+### intellij build ###
+src/main/generated/
